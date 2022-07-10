@@ -1,0 +1,95 @@
+{% extends 'index.html' %}
+
+{% block titulo %}
+Post
+{% endblock titulo %}
+
+{% block contenido %}
+
+<header class="masthead" style="background-image: url('{{post.imagen.url}}')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-8">
+                <div class="post-heading">
+                    <h3 class="display-4 my-3">{{post.titulo}}</h3>
+                    <div class="meta">
+                        <b><a href="/posts/?titulo=&orden=nuevo&categoria={{post.categoria.id}}">{{post.categoria}}</a></b><br>
+                        <h>Posteado por <b><a href="{%url 'perfil' post.autor.id %}">{{post.autor}}</a></b> {{post.fecha_creado}}
+                        </h>
+                    </div>
+                    <div>
+                        {% if post.autor == user %}
+                            <a href="{%url 'editar_post' post.id %}" class="btn btn-outline-light btn-sm mt-4">Editar post</a>
+                            <a href="{%url 'borrar_post' post.id %}" class="btn btn-outline-light btn-sm mt-4">Borrar post</a>
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+ <!-- Post Content-->
+<article class="mb-5">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-8">
+                <div class="mb-5 mt-3">
+                    {{post.contenido}}
+                </div>
+                {% if post.permitir_comentarios %}
+                    {% if user.is_authenticated %}
+                        <form method="POST" action="{% url 'comentar' post.id %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="input-field col s12">
+                                        <div class="mb-2">
+                                            <a>Realiza un Comentario: </a>
+                                        </div>
+                                    <div>
+                                        {{ form_comentario.mensaje }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 mb-4">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <input type="submit" class="btn btn-outline-primary" value="Comentar">
+                                </div>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="post-preview">
+                            <div class="post-meta">
+                                <div class="card card-header">
+                                    <h>Es necesario<b><a href="/login/?next=/post/{{post.id}}"> iniciar sesión </a></b>para realizar comentarios.</h>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if cantidad_comentarios > 0 %}
+                        <div class="card card-header mt-5 mb-2">COMENTARIOS</div>
+                        {% for comentario in comentarios %}
+                        <div class="card">
+                            <h class="card-header"><a href="{%url 'perfil' comentario.username.id %}">{{comentario.username}}</a></h>
+                            <div class="card-body">
+                                <p class="card-text">{{comentario.mensaje}}</p>
+                                <h class="blockquote-footer">Comentado el {{comentario.fecha_creacion}}</h>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="card card-header">
+                        <h>Nadie ha comentado.</h>
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div class="card card-header">
+                    <h>No se permiten comentarios para este post.</h>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</article>
+
+
+{% endblock contenido %}

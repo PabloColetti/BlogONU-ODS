@@ -1,0 +1,83 @@
+{% extends 'index.html' %}
+
+{% block titulo %}
+Posts
+{% endblock titulo %}
+
+{% block contenido %}
+<br>
+<br>
+<br>
+<br>
+<div class="container px-4 px-lg-">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="text-center">
+            <h1 class="display-6 my-3" >BUSCAR POSTS</h1>
+            <form method = "GET" action=""> 
+                <div class="container mt-5">
+                    <ul class="nav justify-content-center">
+                        <li class="nav-item" aria-label=".form-control-lg example">
+                            {{search_form.titulo}}        
+                        </li>
+                        <li class="nav-item">
+                            <div class="btn-group">
+                                <div class="text-center">
+                                    {{search_form.orden}}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="btn-group">
+                                <div class="text-center">
+                                    {{search_form.categoria}}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <input class="btn btn-outline-primary dropdown-toggle btn-lg" type='submit' value="Buscar">
+                        </li>
+                    </ul>
+                </div>  
+            </form>
+            <hr class="my-5" />
+        </div>
+        {% for post in posts %}
+        <div class="col-sm-6 col-md-4">
+            <div class="card">
+                {% if post.imagen.url == 'media/imagen' %}
+                    {% load static %}
+                    <a href="{%url 'ver_post' post.id%}"><img src="{% static 'imagen.jpg' %}" class="card-img-top" height="200px" alt="{{post.titulo}}"></a>
+                {% else %}
+                    <a href="{%url 'ver_post' post.id%}"><img src="{{post.imagen.url}}" class="card-img-top" height="200px" alt="{{post.titulo}}"></a>
+                {% endif %}
+                <div class="card-body">
+                    <div class="text-center">
+                        <h3 class="display-6 my-3">{{ post.titulo | truncatechars:25 }}</h3>
+                    </div>
+                    <h7><b>Autor: </b><a href="{%url 'perfil' post.autor.id %}">{{ post.autor }}</a></h7><br>
+                    <h7><b>Categoria: </b><a href="/posts/?titulo=&orden=nuevo&categoria={{post.categoria.id}}">{{post.categoria}}</a></h7><br>
+                    <p><b>Publicado: </b> {{post.fecha_creado}}</p>
+                    <div class="text-center">
+                        <a href="{%url 'ver_post' post.id%}" class="btn btn-outline-primary">Ver Post</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="mt-5">
+            <div class="position-relative">
+                {% if posts.has_previous %}
+                    <div class="position-absolute top-0 start-0">
+                        <a href="{% url 'listar_posts' %}?page={{posts.previous_page_number}}&titulo={{search_form.titulo.value|default_if_none:''}}&orden={{search_form.orden.value}}&categoria={{search_form.categoria.value|default_if_none:''}}"><button  class="btn btn-outline-primary" type="button">Anterior</button></a>
+                    </div>
+                {% endif %}
+                {% if posts.has_next %}
+                    <div class="position-absolute top-0 end-0" >
+                        <a href="{% url 'listar_posts' %}?page={{posts.next_page_number}}&titulo={{search_form.titulo.value|default_if_none:''}}&orden={{search_form.orden.value}}&categoria={{search_form.categoria.value|default_if_none:''}}"><button  class="btn btn-outline-primary" type="button">Siguiente</button></a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>      
+        <div class="mt-5">
+            <div class="mt-5">
+{% endblock contenido %}

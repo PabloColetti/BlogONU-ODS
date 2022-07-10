@@ -1,0 +1,62 @@
+{% extends 'index.html' %}
+
+{% block titulo %}Editar usuario{%endblock%}
+
+{% block contenido %}
+<br>
+<br>
+<div class="row mt-5">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-sm-10 col-md-3">
+                <div class="text-center">
+                    <h3 class="display-6 mt-3">EDITAR PERFIL</h3>
+                </div>
+                <form method="POST" action=""enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="text mt-4">
+                        <label for="{{ form.username.id_for_label }}">Usuario</label>
+                        <input type="text" class="form-control text-muted" name="{{form.username.html_name}}" value="{{form.username.value}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text mt-4">
+                        <label for="{{ form.first_name.id_for_label }}">Nombre</label>
+                        <input type="text" class="form-control text-muted" name="{{form.first_name.html_name}}" value="{{form.first_name.value}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text mt-4">
+                        <label for="{{ form.last_name.id_for_label }}">Apellido</label>
+                        <input type="text" class="form-control text-muted" name="{{form.last_name.html_name}}" value="{{form.last_name.value}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text mt-4">
+                        <img src="{{user.perfil.img_perfil.url}}" height="50px" alt="">
+                    {{perfil_form.as_p}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-center mt-4">
+                        <a href="{% url 'editar_clave' %}">Cambiar contraseña</a>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <div class="unstyled">
+                        <small class="form-text text-danger">{{form.errors}}</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-center mt-5 mb-5">
+                        <a href="{% url 'perfil' user.id %}" class="btn btn-outline-primary">Cancelar</a>
+                        <input class="btn btn-outline-primary" type="submit" value="Guardar">
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

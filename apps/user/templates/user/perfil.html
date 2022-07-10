@@ -1,0 +1,58 @@
+{%extends 'index.html' %}
+{%block titulo%}
+Perfil - {{perfil.username}}
+{%endblock titulo%}
+{% block contenido %}
+
+<header class="masthead" style="background-image: url('assets/img/about-bg.jpg')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="page-heading">
+                    <h2>{{perfil.first_name}} {{perfil.last_name}}</h2>
+                    <span class="subheading">
+                        <div>
+                            @{{perfil.username}}
+                        </div>
+                        <div>
+                            {% if perfil == user %}
+                                <div class="text-center">
+                                    <a href="{%url 'editar_usuario' %}" class="btn btn-outline-light btn-sm mt-5">Editar perfil</a><br>
+                                </div>
+                            {%endif%}
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                {% for post in lista_posts %}
+                            <!-- Post preview-->
+                            <div class="post-preview">
+                                <a href="{%url 'ver_post' post.id%}">
+                                    <h3 class="display-6 mt-3">{{post.titulo}}</h3>
+                                </a>
+                                <div class="post-meta">
+                                    Categoria:
+                                    <a href="/posts/?titulo=&orden=nuevo&categoria={{post.categoria.id}}">{{post.categoria}}</a><br>
+                                    Posteado el
+                                    {{post.fecha_creado}}
+                                </div>
+                            </div>
+                            <!-- Divider-->
+                            <hr class="my-4" />
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+
+{% endblock contenido %}
